@@ -135,6 +135,8 @@ public class CameraPreview extends ViewGroup {
     // Size of the framing rectangle. If null, defaults to using a margin percentage.
     private Size framingRectSize = null;
 
+    //扫描框加一个 marginBottom的设置项
+    private int framingRectMarginBottom;
     // Fraction of the width / heigth to use as a margin. This fraction is used on each size, so
     // must be smaller than 0.5;
     private double marginFraction = 0.1d;
@@ -274,6 +276,7 @@ public class CameraPreview extends ViewGroup {
 
         int framingRectWidth = (int) styledAttributes.getDimension(R.styleable.zxing_camera_preview_zxing_framing_rect_width, -1);
         int framingRectHeight = (int) styledAttributes.getDimension(R.styleable.zxing_camera_preview_zxing_framing_rect_height, -1);
+        this.framingRectMarginBottom = (int) styledAttributes.getDimension(R.styleable.zxing_camera_preview_zxing_framing_rect_margin_bottom, 0);
 
         if (framingRectWidth > 0 && framingRectHeight > 0) {
             this.framingRectSize = new Size(framingRectWidth, framingRectHeight);
@@ -379,6 +382,8 @@ public class CameraPreview extends ViewGroup {
 
         Rect container = new Rect(0, 0, width, height);
         framingRect = calculateFramingRect(container, surfaceRect);
+        framingRect.top -= framingRectMarginBottom;
+        framingRect.bottom -= framingRectMarginBottom;
         Rect frameInPreview = new Rect(framingRect);
         frameInPreview.offset(-surfaceRect.left, -surfaceRect.top);
 
