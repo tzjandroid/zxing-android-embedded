@@ -32,7 +32,7 @@
   <application>
       <activity android:name="com.journeyapps.barcodescanner.CaptureActivity"
                 android:clearTaskOnLaunch="true"
-                android:screenOrientation="sensorLandscape"
+                android:screenOrientation="fullSensor"
                 android:stateNotNeeded="true"
                 android:theme="@style/zxing_CaptureTheme"
                 android:windowSoftInputMode="stateAlwaysHidden"/>
