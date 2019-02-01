@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -32,7 +34,17 @@ public class DecoratedBarcodeView extends FrameLayout {
     private BarcodeView barcodeView;
     private ViewfinderView viewFinder;
     private TextView statusView;
-
+    private CheckBox torchStateCb;
+    private CompoundButton.OnCheckedChangeListener torchClickListener = new CompoundButton.OnCheckedChangeListener(){
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked){
+                setTorchOn();
+            }else{
+                setTorchOff();
+            }
+        }
+    };
     /**
      * The instance of @link TorchListener to send events callback.
      */
@@ -114,6 +126,41 @@ public class DecoratedBarcodeView extends FrameLayout {
 
         // statusView is optional
         statusView = (TextView) findViewById(R.id.zxing_status_view);
+
+        //闪光灯
+        torchStateCb = (CheckBox) findViewById(R.id.torch_state);
+        torchStateCb.setOnCheckedChangeListener(torchClickListener);
+        barcodeView.addStateListener(new CameraPreview.StateListener() {
+            @Override
+            public void previewSized() {
+                FrameLayout.LayoutParams lp = (LayoutParams) torchStateCb.getLayoutParams();
+                int measuredHeight = (barcodeView.getFramingRect().bottom-barcodeView.getFramingRect().top)/2
+                        +torchStateCb.getMeasuredHeight()
+                        -barcodeView.getFramingRectMarginBottom();
+                lp.setMargins(0,measuredHeight,0,0);
+                torchStateCb.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void previewStarted() {
+
+            }
+
+            @Override
+            public void previewStopped() {
+
+            }
+
+            @Override
+            public void cameraError(Exception error) {
+
+            }
+
+            @Override
+            public void cameraClosed() {
+
+            }
+        });
     }
 
     /**

@@ -30,4 +30,29 @@
         app:zxing_preview_scaling_strategy="centerCrop"
         app:zxing_use_texture_view="false"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/title_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/zxing_ic_menu_back"
+            android:gravity="center_vertical"
+            android:text="扫码"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/title_album_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:text="相册"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 </merge>

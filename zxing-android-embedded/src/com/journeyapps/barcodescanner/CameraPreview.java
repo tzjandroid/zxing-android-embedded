@@ -555,6 +555,13 @@ public class CameraPreview extends ViewGroup {
     }
 
     /**
+     * 扫描框加一个 marginBottom的设置项
+     */
+    public int getFramingRectMarginBottom() {
+        return framingRectMarginBottom;
+    }
+
+    /**
      * The framing rectangle, relative to this view. Use to draw the rectangle.
      *
      * Will never be null while the preview is active.

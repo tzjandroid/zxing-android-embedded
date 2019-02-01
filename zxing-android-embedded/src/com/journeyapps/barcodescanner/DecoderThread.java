@@ -137,11 +137,13 @@ public class DecoderThread {
     }
 
     private void decode(SourceData sourceData) {
-        long start = System.currentTimeMillis();
-        Result rawResult = null;
         sourceData.setCropRect(cropRect);
         LuminanceSource source = createSource(sourceData);
-
+        decode(source,sourceData);
+    }
+    Result decode(LuminanceSource source,SourceData sourceData){
+        long start = System.currentTimeMillis();
+        Result rawResult = null;
         if(source != null) {
             rawResult = decoder.decode(source);
         }
@@ -169,5 +171,6 @@ public class DecoderThread {
             message.sendToTarget();
         }
         requestNextPreview();
+        return rawResult;
     }
 }

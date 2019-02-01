@@ -6,6 +6,8 @@ import android.os.Message;
 import android.util.AttributeSet;
 
 import com.google.zxing.DecodeHintType;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.R;
 
@@ -204,5 +206,12 @@ public class BarcodeView extends CameraPreview {
         stopDecoderThread();
 
         super.pause();
+    }
+
+    public Result decode(LuminanceSource source){
+        if (decoderThread != null) {
+            return decoderThread.decode(source,null);
+        }
+        return null;
     }
 }
