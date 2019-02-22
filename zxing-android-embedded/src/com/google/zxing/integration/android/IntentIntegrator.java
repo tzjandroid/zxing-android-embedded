@@ -385,9 +385,30 @@ public class IntentIntegrator {
                     errorCorrectionLevel,
                     barcodeImagePath);
         }
-        return new IntentResult();
+        return null;
     }
 
+    /**
+     *
+     */
+    public static IntentResult parseActivityResult(Intent intent) {
+        if (intent != null && intent.hasExtra(Intents.Scan.RESULT)) {
+            String contents = intent.getStringExtra(Intents.Scan.RESULT);
+            String formatName = intent.getStringExtra(Intents.Scan.RESULT_FORMAT);
+            byte[] rawBytes = intent.getByteArrayExtra(Intents.Scan.RESULT_BYTES);
+            int intentOrientation = intent.getIntExtra(Intents.Scan.RESULT_ORIENTATION, Integer.MIN_VALUE);
+            Integer orientation = intentOrientation == Integer.MIN_VALUE ? null : intentOrientation;
+            String errorCorrectionLevel = intent.getStringExtra(Intents.Scan.RESULT_ERROR_CORRECTION_LEVEL);
+            String barcodeImagePath = intent.getStringExtra(Intents.Scan.RESULT_BARCODE_IMAGE_PATH);
+            return new IntentResult(contents,
+                    formatName,
+                    rawBytes,
+                    orientation,
+                    errorCorrectionLevel,
+                    barcodeImagePath);
+        }
+        return null;
+    }
     private static List<String> list(String... values) {
         return Collections.unmodifiableList(Arrays.asList(values));
     }
