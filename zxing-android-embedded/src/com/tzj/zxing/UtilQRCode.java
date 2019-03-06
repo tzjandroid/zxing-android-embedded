@@ -4,16 +4,26 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
 import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.PlanarYUVLuminanceSource;
+import com.google.zxing.common.BitMatrix;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
 
-public class Util {
+import static android.graphics.Color.BLACK;
+
+public class UtilQRCode {
 
     public static LuminanceSource bmpToLuminanceSource(Bitmap bmp) {
         int width = bmp.getWidth();
@@ -217,6 +227,83 @@ public class Util {
             Log.e("readBitmapData", "Unable to close content: " + uri);
         } else {
             Log.e("readBitmapData", "Unable to close content: " + uri);
+        }
+        return bitmap;
+    }
+
+    ///=============================================
+
+    /**
+     * 生成二维码 不带图标
+     */
+    public static Bitmap createQRCode(Context ctx,String str, int widthAndHeight) throws Exception {
+        Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+        hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+        hints.put(EncodeHintType.MAX_SIZE, widthAndHeight);
+        hints.put(EncodeHintType.MARGIN, 1);//设置空白边距的宽度
+        BitMatrix matrix = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, widthAndHeight, widthAndHeight,hints);
+
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int[] pixels = new int[width * height];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (matrix.get(x, y)) {
+                    pixels[y * width + x] = BLACK;
+                }
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(width, height,Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bitmap;
+    }
+
+    /**
+     * 生成二维码 带图标
+     */
+    public static Bitmap createQRCodeWithLogo(Context ctx,String str, int widthAndHeight) throws Exception {
+        Bitmap bitmap = createQRCode(ctx, str, widthAndHeight);
+        Drawable logo = ctx.getPackageManager().getApplicationLogo(ctx.getApplicationInfo());
+        Bitmap logoBitmap = ((BitmapDrawable) logo).getBitmap();
+        return addLogo(bitmap,logoBitmap);
+    }
+
+    /**
+     * 在二维码中间添加Logo图案
+     */
+    public static Bitmap addLogo(Bitmap src, Bitmap logo) {
+        if (src == null) {
+            return null;
+        }
+        if (logo == null) {
+            return src;
+        }
+        //获取图片的宽高
+        int srcWidth = src.getWidth();
+        int srcHeight = src.getHeight();
+        int logoWidth = logo.getWidth();
+        int logoHeight = logo.getHeight();
+        if (srcWidth == 0 || srcHeight == 0) {
+            return null;
+        }
+        if (logoWidth == 0 || logoHeight == 0) {
+            return src;
+        }
+        //logo大小为二维码整体大小的1/5
+        float scaleFactor = srcWidth * 1.0f / 5 / logoWidth;
+        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        try {
+            Canvas canvas = new Canvas(bitmap);
+            canvas.drawBitmap(src, 0, 0, null);
+            canvas.scale(scaleFactor, scaleFactor, srcWidth / 2, srcHeight / 2);
+            canvas.drawBitmap(logo, (srcWidth - logoWidth) / 2, (srcHeight - logoHeight) / 2, null);
+
+            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.restore();
+        } catch (Exception e) {
+            bitmap = null;
+            e.getStackTrace();
         }
         return bitmap;
     }

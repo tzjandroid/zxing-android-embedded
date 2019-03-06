@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.google.zxing.LuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.R;
-import com.tzj.zxing.Util;
+import com.tzj.zxing.UtilQRCode;
 
 /**
  *
@@ -104,10 +104,10 @@ public class CaptureActivity extends Activity {
             @Override
             public void run() {
                 try {
-                    Bitmap bitmap = Util.decodeUri(getApplicationContext(),uri,500,500);
+                    Bitmap bitmap = UtilQRCode.decodeUri(getApplicationContext(),uri,500,500);
                     BarcodeView barcodeView = barcodeScannerView.getBarcodeView();
                     if (bitmap!=null && barcodeView!=null){
-                        LuminanceSource luminanceSource = Util.bmpToLuminanceSource(bitmap);
+                        LuminanceSource luminanceSource = UtilQRCode.bmpToLuminanceSource(bitmap);
                         Result result = barcodeView.decode(luminanceSource);
                         if(result!=null){
                             runOnUiThread(new Runnable() {
