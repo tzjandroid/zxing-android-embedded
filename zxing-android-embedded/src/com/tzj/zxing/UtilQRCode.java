@@ -264,9 +264,13 @@ public class UtilQRCode {
      */
     public static Bitmap createQRCodeWithLogo(Context ctx,String str, int widthAndHeight) throws Exception {
         Bitmap bitmap = createQRCode(ctx, str, widthAndHeight);
-        Drawable logo = ctx.getPackageManager().getApplicationLogo(ctx.getApplicationInfo());
-        Bitmap logoBitmap = ((BitmapDrawable) logo).getBitmap();
-        return addLogo(bitmap,logoBitmap);
+
+        Drawable logo = ctx.getPackageManager().getApplicationIcon(ctx.getApplicationInfo());
+        if (logo != null && logo instanceof BitmapDrawable){
+            Bitmap logoBitmap = ((BitmapDrawable) logo).getBitmap();
+            return addLogo(bitmap,logoBitmap);
+        }
+        return bitmap;
     }
 
     /**
