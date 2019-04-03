@@ -232,19 +232,25 @@ public class UtilQRCode {
     }
 
     ///=============================================
-
     /**
      * 生成二维码 不带图标
      */
     public static Bitmap createQRCode(Context ctx,String str, int widthAndHeight) throws Exception {
+        return createQRCode(ctx,BarcodeFormat.QR_CODE,str,widthAndHeight,widthAndHeight);
+    }
+
+    /**
+     * 生成 图片
+     */
+    public static Bitmap createQRCode(Context ctx,BarcodeFormat codeType,String str, int width,int height) throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-        hints.put(EncodeHintType.MAX_SIZE, widthAndHeight);
+        hints.put(EncodeHintType.MAX_SIZE, width);
         hints.put(EncodeHintType.MARGIN, 1);//设置空白边距的宽度
-        BitMatrix matrix = new MultiFormatWriter().encode(str, BarcodeFormat.QR_CODE, widthAndHeight, widthAndHeight,hints);
+        BitMatrix matrix = new MultiFormatWriter().encode(str, codeType, width, height,hints);
 
-        int width = matrix.getWidth();
-        int height = matrix.getHeight();
+        width = matrix.getWidth();
+        height = matrix.getHeight();
         int[] pixels = new int[width * height];
 
         for (int y = 0; y < height; y++) {
